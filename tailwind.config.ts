@@ -33,11 +33,24 @@ export default {
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
+          bg: "hsl(var(--muted-bg))",
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -56,6 +69,12 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
+        badge: {
+          processing: "hsl(var(--badge-processing))",
+          ready: "hsl(var(--badge-ready))",
+          requested: "hsl(var(--badge-requested))",
+          preparing: "hsl(var(--badge-preparing))",
         },
       },
       borderRadius: {
