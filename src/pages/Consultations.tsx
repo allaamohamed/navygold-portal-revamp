@@ -1,16 +1,10 @@
 import { useState } from "react";
-import { Plus, Download, Search, MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { Plus, Download, Search, ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 const consultations = [
   {
@@ -205,26 +199,19 @@ export default function Consultations() {
                         <StatusBadge status={consultation.status} showDot />
                       </td>
                       <td className="px-6 py-5 text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
+                        <div className="flex flex-col gap-2 items-end">
+                          <Button variant="outline" size="sm" asChild className="w-24">
+                            <Link to={`/consultations/${consultation.id}`}>
+                              Open
+                            </Link>
+                          </Button>
+                          {consultation.status.toLowerCase().includes("ready") && (
+                            <Button variant="outline" size="sm" className="w-24 gap-1">
+                              <Download className="h-3 w-3" />
+                              Download
                             </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48 bg-popover">
-                            <DropdownMenuItem asChild>
-                              <Link to={`/consultations/${consultation.id}`} className="cursor-pointer">
-                                Open Consultation
-                              </Link>
-                            </DropdownMenuItem>
-                            {consultation.status.toLowerCase().includes("ready") && (
-                              <DropdownMenuItem className="cursor-pointer">
-                                <Download className="h-4 w-4 mr-2" />
-                                Download Report
-                              </DropdownMenuItem>
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
