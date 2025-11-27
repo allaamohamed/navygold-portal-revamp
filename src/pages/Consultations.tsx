@@ -1,8 +1,16 @@
-import { Plus, Download } from "lucide-react";
+import { useState } from "react";
+import { Plus, Download, Search, MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const consultations = [
   {
@@ -62,12 +70,38 @@ const consultations = [
 ];
 
 export default function Consultations() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+
+  const filteredConsultations = consultations.filter((consultation) => {
+    const matchesSearch = 
+      consultation.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      consultation.patient.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      consultation.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      consultation.caseManager.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      consultation.docspertCM.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = statusFilter === "All" || consultation.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  const statusOptions = [
+    "All",
+    "Under processing",
+    "Report ready",
+    "More info requested",
+    "Closed",
+  ];
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Consultations</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage all consultation cases</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {filteredConsultations.length} active consultation{filteredConsultations.length !== 1 ? 's' : ''}
+          </p>
         </div>
         <Button className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
           <Plus className="h-4 w-4" />
@@ -75,63 +109,126 @@ export default function Consultations() {
         </Button>
       </div>
 
-      <Card className="border-border">
-        <CardHeader className="bg-primary pb-4">
-          <CardTitle className="text-lg font-semibold text-primary-foreground">
-            All Consultations
-          </CardTitle>
-        </CardHeader>
+      {/* Search and Filter Controls */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by ID, patient, specialty, or case manager..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
+        {/* Status Filter Pills */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-muted-foreground font-medium">Filter by status:</span>
+          {statusOptions.map((status) => (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(status)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
+                statusFilter === status
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-background text-foreground border-border hover:bg-muted-bg"
+              }`}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <Card className="border-border shadow-sm rounded-lg">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-primary text-primary-foreground border-b border-primary">
+              <thead className="bg-muted-bg border-b border-border">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium">ID</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium">Patient</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium">Specialty</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium">Case Manager</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium">Docspert CM</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium">Status</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                    <div className="flex items-center gap-1">
+                      ID
+                      <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                    <div className="flex items-center gap-1">
+                      Patient
+                      <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                    <div className="flex items-center gap-1">
+                      Specialty
+                      <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Case Manager</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Docspert CM</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                    <div className="flex items-center gap-1">
+                      Status
+                      <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border bg-card">
-                {consultations.map((consultation) => (
-                  <tr key={consultation.id} className="hover:bg-muted-bg/50 transition-colors">
-                    <td className="px-4 py-3 text-sm font-medium text-foreground">
-                      {consultation.id}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link to={`/consultations/${consultation.id}`} className="text-sm text-info hover:underline font-medium">
-                        {consultation.patient}
-                      </Link>
-                      <span className="text-xs text-muted-foreground block">
-                        {consultation.mrn}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-foreground">{consultation.specialty}</td>
-                    <td className="px-4 py-3 text-sm text-foreground">{consultation.caseManager}</td>
-                    <td className="px-4 py-3 text-sm text-foreground">{consultation.docspertCM}</td>
-                    <td className="px-4 py-3">
-                      <StatusBadge status={consultation.status} showDot />
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link to={`/consultations/${consultation.id}`}>
-                          <Button variant="outline" size="sm" className="text-info border-info/20 hover:bg-info/5">
-                            Open
-                          </Button>
-                        </Link>
-                        {consultation.status.toLowerCase().includes("ready") && (
-                          <Button variant="outline" size="sm" className="gap-1 text-accent border-accent/20 hover:bg-accent/5">
-                            <Download className="h-3 w-3" />
-                            Download Report
-                          </Button>
-                        )}
-                      </div>
+                {filteredConsultations.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                      No consultations found matching your filters.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  filteredConsultations.map((consultation) => (
+                    <tr key={consultation.id} className="hover:bg-muted-bg/50 transition-colors">
+                      <td className="px-6 py-5 text-sm font-medium text-foreground">
+                        {consultation.id}
+                      </td>
+                      <td className="px-6 py-5">
+                        <Link to={`/consultations/${consultation.id}`} className="text-sm text-info hover:underline font-semibold">
+                          {consultation.patient}
+                        </Link>
+                        <span className="text-xs text-muted-foreground block mt-0.5">
+                          MRN: {consultation.mrn}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 text-sm font-medium text-foreground">{consultation.specialty}</td>
+                      <td className="px-6 py-5 text-sm text-foreground">{consultation.caseManager}</td>
+                      <td className="px-6 py-5 text-sm text-foreground">{consultation.docspertCM}</td>
+                      <td className="px-6 py-5">
+                        <StatusBadge status={consultation.status} showDot />
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48 bg-popover">
+                            <DropdownMenuItem asChild>
+                              <Link to={`/consultations/${consultation.id}`} className="cursor-pointer">
+                                Open Consultation
+                              </Link>
+                            </DropdownMenuItem>
+                            {consultation.status.toLowerCase().includes("ready") && (
+                              <DropdownMenuItem className="cursor-pointer">
+                                <Download className="h-4 w-4 mr-2" />
+                                Download Report
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
