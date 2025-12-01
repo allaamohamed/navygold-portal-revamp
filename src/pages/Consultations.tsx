@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plus, Download, Search, ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Input } from "@/components/ui/input";
 
@@ -89,124 +89,121 @@ export default function Consultations() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-border pb-4">
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-4 border-b border-border">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Consultations</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {filteredConsultations.length} active consultation{filteredConsultations.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <Button className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button className="gap-2">
           <Plus className="h-4 w-4" />
           New Consultation
         </Button>
       </div>
 
       {/* Search and Filter Controls */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by ID, patient, specialty, or case manager..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+      <div className="space-y-3">
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by ID, patient, specialty, or case manager..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
 
         {/* Status Filter Pills */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-muted-foreground font-medium">Filter by status:</span>
+          <span className="text-sm text-muted-foreground">Status:</span>
           {statusOptions.map((status) => (
-            <button
+            <Button
               key={status}
+              variant={statusFilter === status ? "default" : "light"}
+              size="sm"
               onClick={() => setStatusFilter(status)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
-                statusFilter === status
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-background text-foreground border-border hover:bg-muted-bg"
-              }`}
             >
               {status}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
 
-      <Card className="border-border shadow-sm rounded-lg">
+      {/* Table */}
+      <Card>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-muted-bg border-b border-border">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
-                    <div className="flex items-center gap-1">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">
+                    <div className="flex items-center gap-1 cursor-pointer hover:text-primary">
                       ID
-                      <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+                      <ArrowUpDown className="h-3 w-3" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
-                    <div className="flex items-center gap-1">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">
+                    <div className="flex items-center gap-1 cursor-pointer hover:text-primary">
                       Patient
-                      <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+                      <ArrowUpDown className="h-3 w-3" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
-                    <div className="flex items-center gap-1">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">
+                    <div className="flex items-center gap-1 cursor-pointer hover:text-primary">
                       Specialty
-                      <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+                      <ArrowUpDown className="h-3 w-3" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Case Manager</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Docspert CM</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
-                    <div className="flex items-center gap-1">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">Case Manager</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">Docspert CM</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">
+                    <div className="flex items-center gap-1 cursor-pointer hover:text-primary">
                       Status
-                      <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+                      <ArrowUpDown className="h-3 w-3" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-foreground">Actions</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-card">
+              <tbody className="divide-y divide-border">
                 {filteredConsultations.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                    <td colSpan={7} className="px-4 py-12 text-center text-sm text-muted-foreground">
                       No consultations found matching your filters.
                     </td>
                   </tr>
                 ) : (
                   filteredConsultations.map((consultation) => (
                     <tr key={consultation.id} className="hover:bg-muted-bg/50 transition-colors">
-                      <td className="px-6 py-5 text-sm font-medium text-foreground">
+                      <td className="px-4 py-3 text-sm font-medium text-foreground">
                         {consultation.id}
                       </td>
-                      <td className="px-6 py-5">
-                        <Link to={`/consultations/${consultation.id}`} className="text-sm text-info hover:underline font-semibold">
+                      <td className="px-4 py-3">
+                        <Link to={`/consultations/${consultation.id}`} className="text-sm text-primary hover:underline font-medium">
                           {consultation.patient}
                         </Link>
-                        <span className="text-xs text-muted-foreground block mt-0.5">
+                        <span className="text-xs text-muted-foreground block">
                           MRN: {consultation.mrn}
                         </span>
                       </td>
-                      <td className="px-6 py-5 text-sm font-medium text-foreground">{consultation.specialty}</td>
-                      <td className="px-6 py-5 text-sm text-foreground">{consultation.caseManager}</td>
-                      <td className="px-6 py-5 text-sm text-foreground">{consultation.docspertCM}</td>
-                      <td className="px-6 py-5">
-                        <StatusBadge status={consultation.status} showDot />
+                      <td className="px-4 py-3 text-sm text-foreground">{consultation.specialty}</td>
+                      <td className="px-4 py-3 text-sm text-muted-foreground">{consultation.caseManager}</td>
+                      <td className="px-4 py-3 text-sm text-muted-foreground">{consultation.docspertCM}</td>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={consultation.status} />
                       </td>
-                      <td className="px-6 py-5 text-right">
-                        <div className="flex flex-col gap-2 items-end">
-                          <Button variant="outline" size="sm" asChild className="w-24">
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex flex-col gap-1.5 items-end">
+                          <Button variant="outline" size="sm" asChild>
                             <Link to={`/consultations/${consultation.id}`}>
                               Open
                             </Link>
                           </Button>
                           {consultation.status.toLowerCase().includes("ready") && (
-                            <Button variant="outline" size="sm" className="w-24 gap-1">
+                            <Button variant="success" size="sm" className="gap-1">
                               <Download className="h-3 w-3" />
                               Download
                             </Button>
