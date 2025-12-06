@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 const activeConsultations = [
   { id: "BPA-1006RP394", patient: "Nuha Abdulrehan", mrn: "18132671", status: "Under processing" },
   { id: "BPA-0406RP415", patient: "Mohamed Mostafeen", mrn: "31338517", status: "More info requested" },
@@ -238,32 +237,61 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* KPI Panel - Total Services */}
-          <Card className="border-border shadow-sm bg-gradient-to-br from-card to-muted/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold text-muted-foreground">
-                Total Services
+          {/* Services Breakdown - Donut Chart */}
+          <Card className="border-border shadow-sm border-l-4 border-l-primary">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-semibold text-foreground">
+                Services Breakdown
               </CardTitle>
+              <p className="text-sm text-muted-foreground">Total services consumed: 0</p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-4xl font-bold text-foreground">337</p>
-                  <p className="text-xl text-muted-foreground">/ 300</p>
-                </div>
-                <Progress value={112.3} className="mt-3 h-2" />
-                <p className="text-xs text-warning mt-2">112% of target capacity</p>
+            <CardContent className="pt-0">
+              {/* Donut Chart */}
+              <div className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: "Services (Report)", value: 0, maxValue: 300 },
+                        { name: "Services (Video)", value: 0, maxValue: 0 },
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={70}
+                      paddingAngle={0}
+                      dataKey="maxValue"
+                      stroke="none"
+                    >
+                      <Cell fill="hsl(var(--muted))" />
+                      <Cell fill="hsl(var(--muted))" />
+                    </Pie>
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      formatter={(value) => (
+                        <span className="text-sm text-muted-foreground">{value}</span>
+                      )}
+                      payload={[
+                        { value: "Services (Report)", type: "square", color: "hsl(var(--accent))" },
+                        { value: "Services (Video)", type: "square", color: "hsl(var(--info))" },
+                      ]}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">2024</p>
-                  <p className="text-lg font-semibold text-foreground">334 / 300</p>
-                  <p className="text-sm text-muted-foreground">Used: 184</p>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border mt-2">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-3 h-3 rounded-full bg-accent mb-2" />
+                  <p className="text-xl font-bold text-foreground">0/300</p>
+                  <p className="text-sm text-muted-foreground">Services (Report)</p>
                 </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">2025</p>
-                  <p className="text-lg font-semibold text-foreground">150</p>
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-3 h-3 rounded-full bg-info mb-2" />
+                  <p className="text-xl font-bold text-foreground">0/0</p>
+                  <p className="text-sm text-muted-foreground">Services (Video)</p>
                 </div>
               </div>
             </CardContent>
