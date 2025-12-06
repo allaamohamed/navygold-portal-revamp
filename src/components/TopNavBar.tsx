@@ -1,4 +1,4 @@
-import { Building2, User, Menu } from "lucide-react";
+import { Building2, User, Menu, HelpCircle } from "lucide-react";
 import { NavLink } from "./NavLink";
 import {
   DropdownMenu,
@@ -8,10 +8,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { SupportModal } from "./SupportModal";
 
 export function TopNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const [supportModalOpen, setSupportModalOpen] = useState(false);
   return (
     <nav className="h-16 border-b border-border bg-primary sticky top-0 z-50">
       <div className="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between">
@@ -59,8 +60,18 @@ export function TopNavBar() {
           </NavLink>
         </div>
 
-        {/* Right Side: Company + User */}
+        {/* Right Side: Support + Company + User */}
         <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden md:flex gap-2 text-primary-foreground hover:bg-primary-foreground/10"
+            onClick={() => setSupportModalOpen(true)}
+          >
+            <HelpCircle className="h-4 w-4" />
+            <span className="text-sm">Support</span>
+          </Button>
+
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-primary-foreground/20 rounded-md bg-primary/50">
             <Building2 className="h-4 w-4 text-primary-foreground" />
             <span className="text-sm font-medium text-primary-foreground">Bupa Arabia</span>
@@ -139,6 +150,8 @@ export function TopNavBar() {
           </div>
         </div>
       )}
+
+      <SupportModal open={supportModalOpen} onOpenChange={setSupportModalOpen} />
     </nav>
   );
 }
