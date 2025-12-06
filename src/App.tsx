@@ -10,6 +10,7 @@ import Consultations from "./pages/Consultations";
 import ConsultationDetail from "./pages/ConsultationDetail";
 import Insights from "./pages/Insights";
 import FAQs from "./pages/FAQs";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/consultations/:id" element={<ConsultationDetail />} />
               <Route path="/insights" element={<Insights />} />
               <Route path="/faqs" element={<FAQs />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
